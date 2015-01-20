@@ -1,6 +1,10 @@
 rabbitmq Cookbook CHANGELOG
 ===========================
 This file is used to list changes made in each version of the rabbitmq cookbook.
+For Traxia
+------------------
+Removed instances of sensitive since OpsWorks doesn't support it.
+
 v3.8.0 (2015-01-07)
 ------------------
 Song of this Release:
