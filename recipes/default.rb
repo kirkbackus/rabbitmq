@@ -189,7 +189,19 @@ else
   existing_erlang_key = ''
 end
 
+# Add all rabbitmq nodes to the hosts file with their short name.
+instances = node[:opsworks][:layers][:rabbitmq][:instances]
+
+instances.each do |name, attrs|
+  hostsfile_entry attrs['ip'] do
+    hostname  "rabbit@#{name}"
+    unique    true
+  end
+end
+
 if node['rabbitmq']['cluster'] && (node['rabbitmq']['erlang_cookie'] != existing_erlang_key)
+  node.set['rabbitmq']['cluster_disk_nodes'] = instances.map{ |name, attrs| "rabbit@#{name}" }
+
   log "stop #{node['rabbitmq']['serice_name']} to change erlang cookie" do
     notifies :stop, "service[#{node['rabbitmq']['service_name']}]", :immediately
   end
